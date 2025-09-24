@@ -29,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.huerto.ui.theme.MyApplicationTheme
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,8 +68,17 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         R.drawable.descarga__6_,
         R.drawable.descarga__10_
     )
+    val dinos=listOf(
+R.drawable.images,
+        R.drawable.el_pajaro_del_amanecer_ilumina_la_historia_de_los_dinosaurios_con_plumas,
+        R.drawable.vel,
+        R.drawable.tri,
+        R.drawable.spi,
+        R.drawable.t
+    )
     var imagen by remember { mutableIntStateOf(0) }
     var felino by remember { mutableIntStateOf(0) }
+    var dino by remember { mutableIntStateOf(0) }
     var punto by remember {  mutableIntStateOf(0)}
     var mejorar by remember {  mutableIntStateOf(mejora)}
     Surface(color = Color.White) {
@@ -91,15 +101,35 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(300.dp),
                 contentScale = ContentScale.Crop
             )
+            if (mejorar==2)
+                Image(
+                    painter = painterResource(id = dinos[dino]),
+                    contentDescription = "gatete",
+                    modifier = Modifier.size(300.dp),
+                    contentScale = ContentScale.Crop
+                )
             Button(onClick = {
-                if (mejorar==0)
-                imagen = (imagen+1)% imagenes.size
-                if (mejorar==1)
-                    felino = (felino+1)% felinos.size
                 cont++
-                if (cont == 6) {
-                    punto += 10
-                    cont = 0
+                if (mejorar==0) {
+                    imagen = (imagen + 1) % imagenes.size
+                    if (cont == 6) {
+                        punto += Random.nextInt(10,20)
+                        cont = 0
+                    }
+                }
+                if (mejorar==1) {
+                    felino = (felino + 1) % felinos.size
+                    if (cont == 6) {
+                        punto += Random.nextInt(45,55)
+                        cont = 0
+                    }
+                }
+                if (mejorar==2) {
+                    dino = (dino + 1) % dinos.size
+                    if (cont == 6) {
+                        punto += Random.nextInt(70,90)
+                        cont = 0
+                    }
                 }
             }) {
                 if (cont < 5) {
@@ -115,10 +145,20 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             Button(onClick = {
             if (punto>=100 && mejorar==0){
             punto-=100
-                mejora=1
-}
+                mejorar=1
+            }
+                if (punto>=500 && mejorar==1) {
+                    punto -= 500
+                    mejorar = 2
+                }
             }){
-           Text("mejorar: 100 puntos")            }
+                if(mejorar==0)
+           Text("mejorar: 100 puntos")
+            if(mejorar==1)
+                Text("mejorar: 500 puntos")
+                if (mejorar==2)
+                    Text("ganar: 1500 puntos ")
+            }
         }
     }
 }
