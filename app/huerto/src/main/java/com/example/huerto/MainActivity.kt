@@ -69,7 +69,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         R.drawable.descarga__10_
     )
     val dinos=listOf(
-R.drawable.images,
+ R.drawable.galiina,
         R.drawable.el_pajaro_del_amanecer_ilumina_la_historia_de_los_dinosaurios_con_plumas,
         R.drawable.vel,
         R.drawable.tri,
@@ -79,6 +79,7 @@ R.drawable.images,
     var imagen by remember { mutableIntStateOf(0) }
     var felino by remember { mutableIntStateOf(0) }
     var dino by remember { mutableIntStateOf(0) }
+    var final by remember { mutableIntStateOf(R.drawable.images) }
     var punto by remember {  mutableIntStateOf(0)}
     var mejorar by remember {  mutableIntStateOf(mejora)}
     Surface(color = Color.White) {
@@ -108,56 +109,67 @@ R.drawable.images,
                     modifier = Modifier.size(300.dp),
                     contentScale = ContentScale.Crop
                 )
-            Button(onClick = {
-                cont++
-                if (mejorar==0) {
-                    imagen = (imagen + 1) % imagenes.size
-                    if (cont == 6) {
-                        punto += Random.nextInt(10,20)
-                        cont = 0
+            if (mejorar==3)
+                Image(
+                    painter = painterResource(id =final ),
+                    contentDescription = "final",
+                    modifier = Modifier.size(300.dp),
+                    contentScale = ContentScale.Crop
+                )
+            if(mejorar!=3) {
+                Button(onClick = {
+                    cont++
+                    if (mejorar == 0) {
+                        imagen = (imagen + 1) % imagenes.size
+                        if (cont == 6) {
+                            punto += Random.nextInt(10, 20)
+                            cont = 0
+                        }
+                    }
+                    if (mejorar == 1) {
+                        felino = (felino + 1) % felinos.size
+                        if (cont == 6) {
+                            punto += Random.nextInt(45, 55)
+                            cont = 0
+                        }
+                    }
+                    if (mejorar == 2) {
+                        dino = (dino + 1) % dinos.size
+                        if (cont == 6) {
+                            punto += Random.nextInt(70, 90)
+                            cont = 0
+                        }
+                    }
+                }) {
+
+                    if (cont < 5) {
+                        Text("crecer")
+                    } else {
+                        Text("Vender")
                     }
                 }
-                if (mejorar==1) {
-                    felino = (felino + 1) % felinos.size
-                    if (cont == 6) {
-                        punto += Random.nextInt(45,55)
-                        cont = 0
+
+                Text(text = " puntuación = $punto")
+                Button(onClick = {
+                    if (punto >= 100 && mejorar == 0) {
+                        punto -= 100
+                        mejorar = 1
                     }
-                }
-                if (mejorar==2) {
-                    dino = (dino + 1) % dinos.size
-                    if (cont == 6) {
-                        punto += Random.nextInt(70,90)
-                        cont = 0
+                    if (punto >= 500 && mejorar == 1) {
+                        punto -= 500
+                        mejorar = 2
                     }
+                    if (punto >= 1500 && mejorar == 2) {
+                        mejorar = 3
+                    }
+                }) {
+                    if (mejorar == 0)
+                        Text("mejorar: 100 puntos")
+                    if (mejorar == 1)
+                        Text("mejorar: 500 puntos")
+                    if (mejorar == 2)
+                        Text("ganar: 1500 puntos ")
                 }
-            }) {
-                if (cont < 5) {
-                    Text("crecer")
-                } else {
-                    Text("Vender")
-                }
-
-
-
-            }
-            Text(text=" puntuación = $punto")
-            Button(onClick = {
-            if (punto>=100 && mejorar==0){
-            punto-=100
-                mejorar=1
-            }
-                if (punto>=500 && mejorar==1) {
-                    punto -= 500
-                    mejorar = 2
-                }
-            }){
-                if(mejorar==0)
-           Text("mejorar: 100 puntos")
-            if(mejorar==1)
-                Text("mejorar: 500 puntos")
-                if (mejorar==2)
-                    Text("ganar: 1500 puntos ")
             }
         }
     }
